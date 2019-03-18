@@ -1,5 +1,5 @@
 import * as Websocket from 'isomorphic-ws';
-import { DiscriminateUnion } from 'utils';
+import { DiscriminateUnion } from 'DTCore/utils';
 
 interface Message<TKind extends string, TPayload> {
     kind: TKind;

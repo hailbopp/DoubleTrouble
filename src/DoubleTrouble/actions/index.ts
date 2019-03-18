@@ -1,5 +1,5 @@
 import { Action } from "DoubleTrouble/actions/core"
-import { DiscriminateUnion } from "utils";
+import { DiscriminateUnion } from "DTCore/utils";
 
 export const ActionCreators = {
     // setLoginFieldValue: (field: AuthFieldName, value: string) => Action.create("UI/SET-AUTH-FIELD-VALUE", {field: field, value: value}),

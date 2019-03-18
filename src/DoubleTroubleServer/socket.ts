@@ -1,6 +1,6 @@
 import * as ws from 'ws';
 import { setWsHeartbeat } from 'ws-heartbeat/server';
-import { DoubleTroubleWebsocket, deserializeMessage, PONG, PING, DTWebsocket } from 'common';
+import { DoubleTroubleWebsocket, deserializeMessage, PONG, PING, DTWebsocket } from 'DTCore/common';
 import { ServerConfig } from 'DoubleTroubleServer/config';
 
 // const sendBatches = (ws: PBWebsocket, people: Array<LdapPerson>) => {

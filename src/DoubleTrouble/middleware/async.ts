@@ -1,6 +1,6 @@
 import { Middleware, Dispatch, MiddlewareAPI } from 'redux';
 import { setWsHeartbeat, WebSocketBase } from "ws-heartbeat/client";
-import { DoubleTroubleWebsocket, PING, DTWebsocket } from "common";
+import { DoubleTroubleWebsocket, PING, DTWebsocket } from "DTCore/common";
 import { AppAction, ActionCreators } from '../actions';
 import { ApplicationState } from '../store';
 
