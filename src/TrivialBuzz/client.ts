@@ -1117,7 +1117,7 @@ export class CategoryApi {
      * @param page Go to particular page. [Optional]
      * @param {*} [options] Override http request options.
      */
-    public findCategories (popular?: number, minimum?: number, page?: number, options: any = {}) : Promise<{ response: http.ClientResponse; body: CategoriesResponse;  }> {
+    public findCategories (popular?: number, minimum?: number, page?: number, options: any = {}) : Promise<{ response: http.IncomingMessage; body: CategoriesResponse;  }> {
         const localVarPath = this.basePath + '/categories.json';
         let localVarQueryParameters: any = {};
         let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
@@ -1157,7 +1157,7 @@ export class CategoryApi {
                 localVarRequestOptions.form = localVarFormParams;
             }
         }
-        return new Promise<{ response: http.ClientResponse; body: CategoriesResponse;  }>((resolve, reject) => {
+        return new Promise<{ response: http.IncomingMessage; body: CategoriesResponse;  }>((resolve, reject) => {
             localVarRequest(localVarRequestOptions, (error, response, body) => {
                 if (error) {
                     reject(error);
@@ -1178,7 +1178,7 @@ export class CategoryApi {
      * @param id ID of category to fetch
      * @param {*} [options] Override http request options.
      */
-    public findCategoriesById (id: number, options: any = {}) : Promise<{ response: http.ClientResponse; body: CategoryResponse;  }> {
+    public findCategoriesById (id: number, options: any = {}) : Promise<{ response: http.IncomingMessage; body: CategoryResponse;  }> {
         const localVarPath = this.basePath + '/categories/{id}.json'
             .replace('{' + 'id' + '}', encodeURIComponent(String(id)));
         let localVarQueryParameters: any = {};
@@ -1212,7 +1212,7 @@ export class CategoryApi {
                 localVarRequestOptions.form = localVarFormParams;
             }
         }
-        return new Promise<{ response: http.ClientResponse; body: CategoryResponse;  }>((resolve, reject) => {
+        return new Promise<{ response: http.IncomingMessage; body: CategoryResponse;  }>((resolve, reject) => {
             localVarRequest(localVarRequestOptions, (error, response, body) => {
                 if (error) {
                     reject(error);
@@ -1282,7 +1282,7 @@ export class QuestionApi {
      * @param valueLess Limit results to questions with value less than (or equal to) this value excluding questions with value of zero [Optional]
      * @param {*} [options] Override http request options.
      */
-    public findAllQuestions (newerThan?: string, olderThan?: string, valueEquals?: number, valueGreater?: number, valueLess?: number, options: any = {}) : Promise<{ response: http.ClientResponse; body: QuestionsResponse;  }> {
+    public findAllQuestions (newerThan?: string, olderThan?: string, valueEquals?: number, valueGreater?: number, valueLess?: number, options: any = {}) : Promise<{ response: http.IncomingMessage; body: QuestionsResponse;  }> {
         const localVarPath = this.basePath + '/questions.json';
         let localVarQueryParameters: any = {};
         let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
@@ -1330,7 +1330,7 @@ export class QuestionApi {
                 localVarRequestOptions.form = localVarFormParams;
             }
         }
-        return new Promise<{ response: http.ClientResponse; body: QuestionsResponse;  }>((resolve, reject) => {
+        return new Promise<{ response: http.IncomingMessage; body: QuestionsResponse;  }>((resolve, reject) => {
             localVarRequest(localVarRequestOptions, (error, response, body) => {
                 if (error) {
                     reject(error);
@@ -1351,7 +1351,7 @@ export class QuestionApi {
      * @param id ID of question to fetch
      * @param {*} [options] Override http request options.
      */
-    public findQuestionById (id: number, options: any = {}) : Promise<{ response: http.ClientResponse; body: QuestionResponse;  }> {
+    public findQuestionById (id: number, options: any = {}) : Promise<{ response: http.IncomingMessage; body: QuestionResponse;  }> {
         const localVarPath = this.basePath + '/questions/{id}.json'
             .replace('{' + 'id' + '}', encodeURIComponent(String(id)));
         let localVarQueryParameters: any = {};
@@ -1385,7 +1385,7 @@ export class QuestionApi {
                 localVarRequestOptions.form = localVarFormParams;
             }
         }
-        return new Promise<{ response: http.ClientResponse; body: QuestionResponse;  }>((resolve, reject) => {
+        return new Promise<{ response: http.IncomingMessage; body: QuestionResponse;  }>((resolve, reject) => {
             localVarRequest(localVarRequestOptions, (error, response, body) => {
                 if (error) {
                     reject(error);
@@ -1410,7 +1410,7 @@ export class QuestionApi {
      * @param valueLess Limit results to questions with value less than (or equal to) this value excluding questions with value of zero [Optional]
      * @param {*} [options] Override http request options.
      */
-    public findRandomQuestion (newerThan?: string, olderThan?: string, valueEquals?: number, valueGreater?: number, valueLess?: number, options: any = {}) : Promise<{ response: http.ClientResponse; body: QuestionResponse;  }> {
+    public findRandomQuestion (newerThan?: string, olderThan?: string, valueEquals?: number, valueGreater?: number, valueLess?: number, options: any = {}) : Promise<{ response: http.IncomingMessage; body: QuestionResponse;  }> {
         const localVarPath = this.basePath + '/questions/random.json';
         let localVarQueryParameters: any = {};
         let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
@@ -1458,7 +1458,7 @@ export class QuestionApi {
                 localVarRequestOptions.form = localVarFormParams;
             }
         }
-        return new Promise<{ response: http.ClientResponse; body: QuestionResponse;  }>((resolve, reject) => {
+        return new Promise<{ response: http.IncomingMessage; body: QuestionResponse;  }>((resolve, reject) => {
             localVarRequest(localVarRequestOptions, (error, response, body) => {
                 if (error) {
                     reject(error);
@@ -1524,7 +1524,7 @@ export class RoundApi {
      * @param id ID of round to fetch.
      * @param {*} [options] Override http request options.
      */
-    public findRoundById (id: number, options: any = {}) : Promise<{ response: http.ClientResponse; body: RoundResponse;  }> {
+    public findRoundById (id: number, options: any = {}) : Promise<{ response: http.IncomingMessage; body: RoundResponse;  }> {
         const localVarPath = this.basePath + '/rounds/{id}.json'
             .replace('{' + 'id' + '}', encodeURIComponent(String(id)));
         let localVarQueryParameters: any = {};
@@ -1558,7 +1558,7 @@ export class RoundApi {
                 localVarRequestOptions.form = localVarFormParams;
             }
         }
-        return new Promise<{ response: http.ClientResponse; body: RoundResponse;  }>((resolve, reject) => {
+        return new Promise<{ response: http.IncomingMessage; body: RoundResponse;  }>((resolve, reject) => {
             localVarRequest(localVarRequestOptions, (error, response, body) => {
                 if (error) {
                     reject(error);
@@ -1625,7 +1625,7 @@ export class SearchApi {
      * @param only Limit results to either questions or categories only. Valid values are &#x60;Question&#x60; and &#x60;Category&#x60; [Optional]
      * @param {*} [options] Override http request options.
      */
-    public search (query: string, only?: string, options: any = {}) : Promise<{ response: http.ClientResponse; body: SearchResponse;  }> {
+    public search (query: string, only?: string, options: any = {}) : Promise<{ response: http.IncomingMessage; body: SearchResponse;  }> {
         const localVarPath = this.basePath + '/search.json';
         let localVarQueryParameters: any = {};
         let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
@@ -1666,7 +1666,7 @@ export class SearchApi {
                 localVarRequestOptions.form = localVarFormParams;
             }
         }
-        return new Promise<{ response: http.ClientResponse; body: SearchResponse;  }>((resolve, reject) => {
+        return new Promise<{ response: http.IncomingMessage; body: SearchResponse;  }>((resolve, reject) => {
             localVarRequest(localVarRequestOptions, (error, response, body) => {
                 if (error) {
                     reject(error);
@@ -1732,7 +1732,7 @@ export class ShowApi {
      * @param id ID of show to fetch.
      * @param {*} [options] Override http request options.
      */
-    public findShowById (id: number, options: any = {}) : Promise<{ response: http.ClientResponse; body: ShowResponse;  }> {
+    public findShowById (id: number, options: any = {}) : Promise<{ response: http.IncomingMessage; body: ShowResponse;  }> {
         const localVarPath = this.basePath + '/shows/{id}.json'
             .replace('{' + 'id' + '}', encodeURIComponent(String(id)));
         let localVarQueryParameters: any = {};
@@ -1766,7 +1766,7 @@ export class ShowApi {
                 localVarRequestOptions.form = localVarFormParams;
             }
         }
-        return new Promise<{ response: http.ClientResponse; body: ShowResponse;  }>((resolve, reject) => {
+        return new Promise<{ response: http.IncomingMessage; body: ShowResponse;  }>((resolve, reject) => {
             localVarRequest(localVarRequestOptions, (error, response, body) => {
                 if (error) {
                     reject(error);
@@ -1788,7 +1788,7 @@ export class ShowApi {
      * @param chronoSort \&quot;old\&quot; to sort in ascending chronological order, \&quot;recent\&quot; for descending. [Optional]
      * @param {*} [options] Override http request options.
      */
-    public findShows (page?: number, chronoSort?: string, options: any = {}) : Promise<{ response: http.ClientResponse; body: ShowsResponse;  }> {
+    public findShows (page?: number, chronoSort?: string, options: any = {}) : Promise<{ response: http.IncomingMessage; body: ShowsResponse;  }> {
         const localVarPath = this.basePath + '/shows.json';
         let localVarQueryParameters: any = {};
         let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
@@ -1824,7 +1824,7 @@ export class ShowApi {
                 localVarRequestOptions.form = localVarFormParams;
             }
         }
-        return new Promise<{ response: http.ClientResponse; body: ShowsResponse;  }>((resolve, reject) => {
+        return new Promise<{ response: http.IncomingMessage; body: ShowsResponse;  }>((resolve, reject) => {
             localVarRequest(localVarRequestOptions, (error, response, body) => {
                 if (error) {
                     reject(error);

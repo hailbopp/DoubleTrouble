@@ -1,34 +1,69 @@
 import { Option } from 'ts-option';
+import { MaybeDocument } from 'nano';
 
-export interface UnansweredQuestion {
+type Guid = string;
+
+type UserID = Guid;
+type PlayerID = Guid;
+type GameID = Guid;
+
+export interface UserCredentials {
+    username: string;
+    passwordHash: string;
+}
+
+export interface TriviaSolution {
+    solutionText: string;
+    playerId: PlayerID;
+    isCorrect: Option<boolean>;
+}
+
+export interface TriviaQuestion {
     questionId: number;
     points: number;
-    answerBody: string;
+    questionBody: string;
+    proposedSolutions: Array<TriviaSolution>;
 }
 
-export type AnsweredQuestion = UnansweredQuestion & {
-    correctResponse: Option<string>; // Will be Some<string> if the question has been answered.
-}
-
-export type Question =
-    | UnansweredQuestion
-    | AnsweredQuestion;
-
-export interface BoardCategory {
+export interface TriviaCategory {
     categoryId: number;
     title: string;
-    questions: Array<Question>;
+    questions: Array<TriviaQuestion>;
 }
 
-export type Board = Array<BoardCategory>;
+export type Board = Array<TriviaCategory>;
 
-export interface Player {
-    name: string;
+interface _User {
+    userId: UserID;
+    email: string;
+    passwordHash: string;
+    handle: string;
+}
+export type User = MaybeDocument & _User;
+
+export interface GamePlayer {
+    playerId: PlayerID;
+    userId: UserID;
     score: number;
 }
 
-export interface Game {
-    gameId: number;
-    joinCode: string;
-    boardState: Board;
+export type RoundRulesType =
+    | "Basic"
+    | "Double"
+    | "Final";
+
+export interface GameRound {
+    roundNumber: number;
+    rulesType: RoundRulesType;
+    board: Board;
 }
+
+interface _Game {
+    gameId: GameID;
+    created: Date;
+    joinCode: string;
+    players: Array<GamePlayer>;
+    rounds: Array<GameRound>;
+}
+
+export type Game = _Game & MaybeDocument;

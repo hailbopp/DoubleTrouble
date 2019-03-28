@@ -11,7 +11,11 @@ export const ActionCreators = {
     // receiveLdapConfiguration: (cfg: LdapConfiguration) => Action.create("WS/RX-LDAP-CFG", cfg),
     // receivePersonBatch: (batch: Array<LdapPerson>) => Action.create("WS/RX-PERSON-BATCH", batch),    
 
-    noop: () => Action.create("NOOP")
+    noop: () => Action.create("NOOP"),
+
+    // Websocket actions
+    attemptAuth: (username: string, password: string) => Action.create("WS/auth", {username, password}),
+    register: (email: string, handle: string, password: string) => Action.create("WS/register", { email, handle, password }),
 }
 
 export type AppAction = Action.ActionUnion<typeof ActionCreators>;

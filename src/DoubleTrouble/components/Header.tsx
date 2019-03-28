@@ -3,6 +3,7 @@ import { ApplicationState } from "DoubleTrouble/store";
 import { connect } from "react-redux";
 import { Dispatch } from "redux";
 import { AppAction } from "DoubleTrouble/actions";
+import { APP_NAME } from "DTCore/constants";
 
 const mapState = (state: ApplicationState) => ({
 });
@@ -14,7 +15,7 @@ class Header extends React.Component<ReturnType<typeof mapState> & ReturnType<ty
     render() {
         return (
             <div>
-                <h3>DoubleTrouble</h3>
+                <h3>{APP_NAME}</h3>
                 <hr/>
             </div>
         );

@@ -1,5 +1,6 @@
 import * as Websocket from 'isomorphic-ws';
 import { DiscriminateUnion } from 'DTCore/utils';
+import { AppAction } from 'DoubleTrouble/actions';
 
 interface Message<TKind extends string, TPayload> {
     kind: TKind;
@@ -9,6 +10,9 @@ interface Message<TKind extends string, TPayload> {
 
 // Websocket Events
 export type Heartbeat = Message<"ping" | "pong", undefined>;
+
+export type ReduxActionRequest = Message<"action-request", AppAction>;
+export type ReduxActionResponse = Message<"action-response", AppAction>;
 
 // export type RequestConfiguration = Message<"cfg-request", undefined>;
 // export type LdapConfig = Message<'ldap-cfg', LdapConfiguration>;
@@ -22,13 +26,8 @@ export type Heartbeat = Message<"ping" | "pong", undefined>;
 
 export type WebsocketEvent =
     | Heartbeat
-    // | RequestConfiguration
-    // | LdapConfig
-    // | Auth
-    // | InvalidCredentials
-    // | SuccessfulAuth
-    // | LdapErrorResponse
-    // | PersonData
+    | ReduxActionRequest
+    | ReduxActionResponse
     ;
 
 export type WebsocketEventKind = ReturnType<(t: WebsocketEvent) => typeof t.kind>
