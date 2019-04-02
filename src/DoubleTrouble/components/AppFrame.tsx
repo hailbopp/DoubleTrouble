@@ -6,8 +6,10 @@ import { AppAction } from "DoubleTrouble/actions";
 import Header from './Header';
 import { FONT_FAMILY } from 'DoubleTrouble/style';
 import GameFrame from './GameFrame';
+import AuthForm from './AuthForm';
 
 const mapState = (state: ApplicationState) => ({
+    isUserAuthenticated: state.User.AuthedUser.isDefined,
 });
 
 const mapDispatch = (dispatch: Dispatch<AppAction>) => ({
@@ -22,7 +24,12 @@ class AppFrame extends React.Component<ReturnType<typeof mapState> & ReturnType<
         return (
             <div style={this.containerStyle}>
                 <Header />
-                <GameFrame />
+                {
+                    this.props.isUserAuthenticated
+                        ? <GameFrame />
+                        : <AuthForm open={ !this.props.isUserAuthenticated } />
+                }
+                
             </div>
         );
     }

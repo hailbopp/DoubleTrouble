@@ -3,7 +3,12 @@ import { none } from "ts-option";
 
 const defaultState: ApplicationState = {
     User: {
-        AuthedUser: none
+        AuthedUser: none,
+    },
+    AuthForm: {
+        FormType: "login",
+        EmailAddress: "",
+        Password: "",
     }
 }
 

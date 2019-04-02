@@ -10,5 +10,17 @@ export const reducers: Reducer<ApplicationState> = combineReducers<ApplicationSt
 
         // example usage
         NOOP: action => mutate({})
-    }))
+    })),
+
+    AuthForm: reduce(defaults.AuthForm, (state, mutate) => ({
+        "UI/AuthForm/form-type/set": action => mutate({
+            FormType: action.payload,
+        }),
+        "UI/AuthForm/email/set": action => mutate({
+            EmailAddress: action.payload,
+        }),
+        "UI/AuthForm/password/set": action => mutate({
+            Password: action.payload,
+        }),
+    })),
 });

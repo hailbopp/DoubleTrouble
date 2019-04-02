@@ -1,17 +1,14 @@
 import { Action } from "DoubleTrouble/actions/core"
 import { DiscriminateUnion } from "DTCore/utils";
+import { LoginRegisterFormData } from "DoubleTrouble/store";
 
 export const ActionCreators = {
-    // setLoginFieldValue: (field: AuthFieldName, value: string) => Action.create("UI/SET-AUTH-FIELD-VALUE", {field: field, value: value}),
-
-    // submitLoginForm: (username: string, password: string) => Action.create("CONTROL/SUBMIT-AUTH-FORM", { username, password }),
-    // setAuthenticated: (hasAuthed: boolean) => Action.create("CONTROL/SET-AUTHENTICATED", hasAuthed),
-
-    // requestLdapConfiguration: () => Action.create("WS/REQ-LDAP-CFG"),
-    // receiveLdapConfiguration: (cfg: LdapConfiguration) => Action.create("WS/RX-LDAP-CFG", cfg),
-    // receivePersonBatch: (batch: Array<LdapPerson>) => Action.create("WS/RX-PERSON-BATCH", batch),    
-
     noop: () => Action.create("NOOP"),
+
+    // UI actions
+    setAuthFormType: (t: LoginRegisterFormData["FormType"]) => Action.create("UI/AuthForm/form-type/set", t),
+    setAuthFormEmail: (email: string) => Action.create("UI/AuthForm/email/set", email),
+    setAuthFormPass: (pass: string) => Action.create("UI/AuthForm/password/set", pass),
 
     // Websocket actions
     attemptAuth: (username: string, password: string) => Action.create("WS/auth", {username, password}),

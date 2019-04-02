@@ -5,8 +5,7 @@ import { initializeDatabase } from "./data";
 
 export const init = (config: ServerConfig) => {
     import("express-ws").then(expressWebsocketLib => {
-        //setTimeout(() => initializeDatabase({host: "couch", port: 5984}), 5000);
-        
+        setTimeout(() => initializeDatabase({host: "couch", port: 5984}), 5000);        
 
         const wsApp = expressWebsocketLib(express());
         const app = wsApp.app;
