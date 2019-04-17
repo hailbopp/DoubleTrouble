@@ -1,13 +1,13 @@
 import { Action } from "DoubleTrouble/actions/core";
 import { DiscriminateUnion } from "DTCore/utils";
-import { LoginRegisterFormData } from "DoubleTrouble/store";
+import { ILoginRegisterFormData } from "DoubleTrouble/store";
 import { User } from "DTCore/models";
 
 const actionCreators = {
     noop: () => Action.create("NOOP"),
 
     // UI actions
-    setAuthFormType: (t: LoginRegisterFormData["FormType"]) => Action.create("UI/AuthForm/form-type/set", t),
+    setAuthFormType: (t: ILoginRegisterFormData["FormType"]) => Action.create("UI/AuthForm/form-type/set", t),
     setAuthFormEmail: (email: string) => Action.create("UI/AuthForm/email/set", email),
     setAuthFormPass: (pass: string) => Action.create("UI/AuthForm/password/set", pass),
 

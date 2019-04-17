@@ -1,5 +1,5 @@
 import * as React from "react";
-import { ApplicationState } from "DoubleTrouble/store";
+import { IApplicationState } from "DoubleTrouble/store";
 import { connect } from "react-redux";
 import { Dispatch } from "redux";
 import { AppAction, ActionCreators } from "DoubleTrouble/actions";
@@ -11,16 +11,16 @@ import {
   TextField,
   withStyles,
   Dialog,
-  Button
+  Button,
 } from "@material-ui/core";
 
-export interface AuthFormProps {
+export interface IAuthFormProps {
   open: boolean;
 }
 
-const mapState = (state: ApplicationState) => ({
+const mapState = (state: IApplicationState) => ({
   emailFieldValue: state.AuthForm.EmailAddress,
-  passFieldValue: state.AuthForm.Password
+  passFieldValue: state.AuthForm.Password,
 });
 
 const mapDispatch = (dispatch: Dispatch<AppAction>) => ({
@@ -38,12 +38,12 @@ const containerStyle = (theme: Theme) =>
     textField: {
       marginLeft: theme.spacing.unit,
       marginRight: theme.spacing.unit,
-      width: 200
-    }
+      width: 200,
+    },
   });
 
 class AuthForm extends React.Component<
-  AuthFormProps &
+  IAuthFormProps &
     ReturnType<typeof mapState> &
     ReturnType<typeof mapDispatch> &
     WithStyles<typeof containerStyle>
@@ -59,7 +59,7 @@ class AuthForm extends React.Component<
             this.props.handlePassChange(e.currentTarget.value);
             break;
       }
-  };
+  }
 
   private doRegister = () => {
       this.props.register(this.props.emailFieldValue, this.props.passFieldValue);
@@ -69,7 +69,7 @@ class AuthForm extends React.Component<
     this.props.login(this.props.emailFieldValue, this.props.passFieldValue);
   }
 
-  render() {
+  public render() {
     return (
       <Dialog open={this.props.open}>
         <div>
@@ -110,6 +110,6 @@ class AuthForm extends React.Component<
 export default withStyles(containerStyle)(
   connect(
     mapState,
-    mapDispatch
-  )(AuthForm)
+    mapDispatch,
+  )(AuthForm),
 );

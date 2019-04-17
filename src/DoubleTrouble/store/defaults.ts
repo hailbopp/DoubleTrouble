@@ -1,4 +1,4 @@
-import { ApplicationState } from "DoubleTrouble/store";
+import { IApplicationState } from "DoubleTrouble/store";
 import { none, some } from "ts-option";
 import { User } from "DTCore/models";
 
@@ -7,15 +7,15 @@ const getUserDefault = () => {
     return {
         AuthedUser: existingUser ? some(JSON.parse(existingUser) as User) : none,
     };
-}
+};
 
-const defaultState: ApplicationState = {
+const defaultState: IApplicationState = {
     User: getUserDefault(),
     AuthForm: {
         FormType: "login",
         EmailAddress: "",
         Password: "",
-    }
-}
+    },
+};
 
 export default defaultState;

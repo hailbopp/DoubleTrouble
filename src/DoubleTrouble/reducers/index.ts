@@ -1,12 +1,12 @@
 import { Reducer, combineReducers } from "redux";
-import { ApplicationState } from "DoubleTrouble/store";
+import { IApplicationState } from "DoubleTrouble/store";
 import { reduce } from "DoubleTrouble/reducers/core";
 import defaults from "DoubleTrouble/store/defaults";
 
 import "DoubleTrouble/reducers/extensions";
 import { some } from "ts-option";
 
-export const reducers: Reducer<ApplicationState> = combineReducers<ApplicationState>({
+export const reducers: Reducer<IApplicationState> = combineReducers<IApplicationState>({
     User: reduce(defaults.User, (state, utils) => ({
         "WS/auth/result": action => {
             localStorage.setItem("dtrbl.user", JSON.stringify(action.payload.result));

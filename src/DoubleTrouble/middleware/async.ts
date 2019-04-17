@@ -2,7 +2,7 @@ import { Middleware, Dispatch, MiddlewareAPI } from "redux";
 import { setWsHeartbeat, WebSocketBase } from "ws-heartbeat/client";
 import { DoubleTroubleWebsocket, PING, DTWebsocket, ReduxActionRequest } from "DTCore/common";
 import { AppAction, ActionCreators } from "../actions";
-import { ApplicationState } from "../store";
+import { IApplicationState } from "../store";
 import { ClientAction } from "../actions/index";
 
 const getWebsocketUrl = (s: string) => {
@@ -24,7 +24,7 @@ export const initializeWebsockets = (): DTWebsocket => {
 const Req = (a: ClientAction): ReduxActionRequest => ({kind: "action-request", payload: a});
 
 export const WebsocketReduxAdapterMiddleware: Middleware =
-    (store: MiddlewareAPI<Dispatch<AppAction>, ApplicationState>) => {
+    (store: MiddlewareAPI<Dispatch<AppAction>, IApplicationState>) => {
         const dtws = initializeWebsockets();
         const dispatch = (aa: AppAction) => Promise.resolve().then(_ => store.dispatch(aa));
 

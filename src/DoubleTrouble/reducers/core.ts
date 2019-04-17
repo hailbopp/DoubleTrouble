@@ -1,7 +1,7 @@
-import { ApplicationState } from "DoubleTrouble/store";
+import { IApplicationState } from "DoubleTrouble/store";
 import { ActionCase, AppAction, ActionType } from "DoubleTrouble/actions";
 
-const getStateMember = (k: keyof ApplicationState, s: ApplicationState) => s[k];
+const getStateMember = (k: keyof IApplicationState, s: IApplicationState) => s[k];
 type StateComponent = ReturnType<typeof getStateMember>;
 
 interface IReducerUtils<TState extends StateComponent, TAction extends AppAction> {

@@ -1,25 +1,22 @@
 import { Option } from "ts-option";
-import { User, Game } from 'DTCore/models';
+import { User, Game } from "DTCore/models";
 
-
-
-export interface LoginRegisterFormData {
+export interface ILoginRegisterFormData {
     FormType: "login" | "register";
     EmailAddress: string;
     Password: string;
 }
 
-export interface UserData {
+export interface IUserData {
     AuthedUser: Option<User>;
 }
 
-export interface LobbyData {
+export interface ILobbyData {
     AvailableGames: Option<Array<Partial<Game>>>;
 }
 
-export interface ApplicationState {
-    User: UserData;
+export interface IApplicationState {
+    User: IUserData;
 
-    AuthForm: LoginRegisterFormData;
+    AuthForm: ILoginRegisterFormData;
 }
-
