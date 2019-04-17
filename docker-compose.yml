@@ -11,11 +11,27 @@ services:
     build:
       dockerfile: Dockerfile
       context: .
+    command: npm run serve
     ports:
       - "9000:9000"
+    volumes:
+      - ./src:/opt/doubletrouble/src
+      - ./data:/opt/doubletrouble/data
+      - ./dist:/opt/doubletrouble/dist
     depends_on:
       - couch
     env_file: 
       - ./.env
+  # nginx:
+  #   build:
+  #     dockerfile: Dockerfile.nginx
+  #     context: .
+  #   ports:
+  #     - "9000:80"
+  #   volumes:
+  #     - ./dist:/opt/doubletrouble/dist
+  #   depends_on:
+  #     - web
 volumes:
   couchdb-data:
+  dist:

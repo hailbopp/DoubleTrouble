@@ -1,14 +1,15 @@
-import { Middleware, Dispatch, MiddlewareAPI } from 'redux';
+import { Middleware, Dispatch, MiddlewareAPI } from "redux";
 import { setWsHeartbeat, WebSocketBase } from "ws-heartbeat/client";
-import { DoubleTroubleWebsocket, PING, DTWebsocket } from "DTCore/common";
-import { AppAction, ActionCreators } from '../actions';
-import { ApplicationState } from '../store';
+import { DoubleTroubleWebsocket, PING, DTWebsocket, ReduxActionRequest } from "DTCore/common";
+import { AppAction, ActionCreators } from "../actions";
+import { ApplicationState } from "../store";
+import { ClientAction } from "../actions/index";
 
 const getWebsocketUrl = (s: string) => {
     const l = window.location;
     const port = parseInt(l.port);
 
-    return ((l.protocol === "https:") ? "wss://" : "ws://") + l.hostname + (((port != 80) && (port != 443)) ? ":" + port : "") + l.pathname + s;
+    return ((l.protocol === "https:") ? "wss://" : "ws://") + l.hostname + (((port !== 80) && (port !== 443)) ? ":" + port : "") + l.pathname + s;
 };
 
 export const initializeWebsockets = (): DTWebsocket => {
@@ -20,9 +21,11 @@ export const initializeWebsockets = (): DTWebsocket => {
     return ws;
 };
 
+const Req = (a: ClientAction): ReduxActionRequest => ({kind: "action-request", payload: a});
+
 export const WebsocketReduxAdapterMiddleware: Middleware =
     (store: MiddlewareAPI<Dispatch<AppAction>, ApplicationState>) => {
-        //const dtws = initializeWebsockets();
+        const dtws = initializeWebsockets();
         const dispatch = (aa: AppAction) => Promise.resolve().then(_ => store.dispatch(aa));
 
         dispatch(ActionCreators.noop());
@@ -47,20 +50,21 @@ export const WebsocketReduxAdapterMiddleware: Middleware =
             // pws.on("auth-success", (msg) => {
             //     dispatch(ActionCreators.setAuthenticated(true));
             // })
-    
+
+            dtws.on("action-response", (msg) => {
+                dispatch(msg.payload);
+            });
+
             return (action: AppAction) => {
                 next(action);
+                switch (action.type) {
+                        case "WS/auth":
+                        case "WS/register":
+                            return dtws.emit(Req(action));
 
-                    // switch(action.type) {
-                    //     case "WS/REQ-LDAP-CFG":
-                    //         return pws.emit({ kind: "cfg-request", payload: undefined })
-
-                    //     case "CONTROL/SUBMIT-AUTH-FORM":
-                    //         return pws.emit({ kind: "auth", payload: action.payload })
-
-                    //     default:
-                    //         return action;
-                    // }
-            }
-        }
-    } 
+                        default:
+                            return action;
+                    }
+            };
+        };
+    };

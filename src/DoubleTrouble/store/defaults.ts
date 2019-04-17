@@ -1,10 +1,16 @@
 import { ApplicationState } from "DoubleTrouble/store";
-import { none } from "ts-option";
+import { none, some } from "ts-option";
+import { User } from "DTCore/models";
+
+const getUserDefault = () => {
+    const existingUser = localStorage.getItem("dtrbl.user");
+    return {
+        AuthedUser: existingUser ? some(JSON.parse(existingUser) as User) : none,
+    };
+}
 
 const defaultState: ApplicationState = {
-    User: {
-        AuthedUser: none,
-    },
+    User: getUserDefault(),
     AuthForm: {
         FormType: "login",
         EmailAddress: "",

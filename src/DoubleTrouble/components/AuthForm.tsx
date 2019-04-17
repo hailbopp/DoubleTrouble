@@ -26,14 +26,14 @@ const mapState = (state: ApplicationState) => ({
 const mapDispatch = (dispatch: Dispatch<AppAction>) => ({
   handleEmailChange: (v: string) =>
     dispatch(ActionCreators.setAuthFormEmail(v)),
-  handlePassChange: (v: string) => dispatch(ActionCreators.setAuthFormPass(v))
+  handlePassChange: (v: string) => dispatch(ActionCreators.setAuthFormPass(v)),
+  register: (email: string, pass: string) => dispatch(ActionCreators.register(email, pass)),
+  login: (email: string, pass: string) => dispatch(ActionCreators.attemptAuth(email, pass)),
 });
 
 const containerStyle = (theme: Theme) =>
   createStyles({
     container: {
-      display: "flex",
-      flexWrap: "wrap"
     },
     textField: {
       marginLeft: theme.spacing.unit,
@@ -50,9 +50,24 @@ class AuthForm extends React.Component<
 > {
   private formId = "auth_" + uuid();
 
-  private handleFieldChange: React.ChangeEventHandler<
-    HTMLInputElement
-  > = e => {};
+  private handleFieldChange = (s: "email" | "password") => (e: React.ChangeEvent<HTMLInputElement>) => {
+      switch(s) {
+          case "email":
+            this.props.handleEmailChange(e.currentTarget.value);
+            break;
+        case "password":
+            this.props.handlePassChange(e.currentTarget.value);
+            break;
+      }
+  };
+
+  private doRegister = () => {
+      this.props.register(this.props.emailFieldValue, this.props.passFieldValue);
+  }
+
+  private doLogin = () => {
+    this.props.login(this.props.emailFieldValue, this.props.passFieldValue);
+  }
 
   render() {
     return (
@@ -65,21 +80,26 @@ class AuthForm extends React.Component<
               className={this.props.classes.textField}
               value={this.props.emailFieldValue}
               type="email"
-              onChange={this.handleFieldChange}
+              onChange={this.handleFieldChange("email")}
               margin="normal"
             />
-            <br/>
             <TextField
               label="Password"
               name={this.formId + "_pass"}
               className={this.props.classes.textField}
               value={this.props.passFieldValue}
               type="password"
-              onChange={this.handleFieldChange}
+              onChange={this.handleFieldChange("password")}
               margin="normal"
             />
             <br/>
-            <Button color="primary" variant="contained">Log in</Button>
+            <Button color="primary" variant="contained" onClick={this.doLogin}>
+              Log in
+            </Button>
+
+            <Button color="secondary" variant="contained" onClick={this.doRegister}>
+              Register
+            </Button>
           </form>
         </div>
       </Dialog>

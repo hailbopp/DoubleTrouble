@@ -10,9 +10,7 @@ RUN npm install
 
 ADD ./tsconfig.json .
 ADD ./webpack.config.js .
-ADD ./src ./src
-
-RUN npm run build
+# ADD ./src ./src
 
 EXPOSE 9000
 

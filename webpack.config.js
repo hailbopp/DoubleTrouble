@@ -16,6 +16,24 @@ const extractSass = new ExtractTextPlugin({
 const baseConfig = {
     mode: "development",
     devtool: 'inline-source-map',
+    devServer: {
+        contentBase: path.join(__dirname, 'dist'),
+        port: 9001,
+        host: "0.0.0.0",
+        disableHostCheck: true,
+        proxy: {
+            '/ws': {
+              target: 'ws://localhost:9000/ws',
+              secure: false,
+              ws: true,
+            },
+            '/sockjs-node/*': {
+                target: 'ws://localhost:9000',
+                secure: false,
+                ws: true,
+              }
+        }
+    },
     resolve: { extensions: ['.webpack.js', '.web.js', '.ts', '.tsx', '.js'], alias: {}, plugins: [ new TsConfigPathsPlugin() ]},
     module: {
         rules: [
@@ -43,7 +61,7 @@ const clientConfig = Object.assign({}, baseConfig, {
     output: {
         path: path.resolve(__dirname, 'dist/client'),
         publicPath: '/',
-        filename: `doubletrouble.client${DEBUG ? '' : '.[chunkhash:8]'}.js`
+        filename: `doubletrouble.client${DEBUG ? '' : '.[hash:8]'}.js`
     },
     plugins: [
         extractSass,

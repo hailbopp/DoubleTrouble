@@ -1,8 +1,9 @@
-import { Action } from "DoubleTrouble/actions/core"
+import { Action } from "DoubleTrouble/actions/core";
 import { DiscriminateUnion } from "DTCore/utils";
 import { LoginRegisterFormData } from "DoubleTrouble/store";
+import { User } from "DTCore/models";
 
-export const ActionCreators = {
+const actionCreators = {
     noop: () => Action.create("NOOP"),
 
     // UI actions
@@ -10,10 +11,25 @@ export const ActionCreators = {
     setAuthFormEmail: (email: string) => Action.create("UI/AuthForm/email/set", email),
     setAuthFormPass: (pass: string) => Action.create("UI/AuthForm/password/set", pass),
 
-    // Websocket actions
-    attemptAuth: (username: string, password: string) => Action.create("WS/auth", {username, password}),
-    register: (email: string, handle: string, password: string) => Action.create("WS/register", { email, handle, password }),
-}
+    // Websocket request actions
+    attemptAuth: (username: string, password: string) => Action.create("WS/auth", {email: username, password}),
+    register: (email: string, password: string) => Action.create("WS/register", { email, password }),
+
+    // Websocket responses
+    authResult: (result: User) => Action.create("WS/auth/result", { result }),
+    registerResult: (result: User) => Action.create("WS/register/result", { result }),
+};
+
+export type ClientAction = Action.ActionUnion<typeof actionCreators>;
+
+export const ActionCreators = Object.assign({}, actionCreators, {
+    actionResponse:
+        <TRequest extends ClientAction, TResponse extends ClientAction>(request: TRequest, response: TResponse, status?: { code: number; message: string; }) =>
+            Action.create("WS/response", { request, response, status }),
+
+    errorResponse: <TRequest extends ClientAction>(request: TRequest, message: string) =>
+        Action.create("WS/response/error", {request, message}),
+});
 
 export type AppAction = Action.ActionUnion<typeof ActionCreators>;
 

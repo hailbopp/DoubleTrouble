@@ -1,7 +1,8 @@
-import * as ws from 'ws';
-import { setWsHeartbeat } from 'ws-heartbeat/server';
-import { DoubleTroubleWebsocket, deserializeMessage, PONG, PING, DTWebsocket } from 'DTCore/common';
-import { ServerConfig } from 'DoubleTroubleServer/config';
+import { setWsHeartbeat } from "ws-heartbeat/server";
+import { DoubleTroubleWebsocket, deserializeMessage, PONG, PING, DTWebsocket } from "DTCore/common";
+import { IServerConfig } from "DoubleTroubleServer/config";
+import { handleEvent } from "./handlers";
+import { ActionCreators } from "../DoubleTrouble/actions/index";
 
 // const sendBatches = (ws: PBWebsocket, people: Array<LdapPerson>) => {
 //     const batchToSend = people.splice(0, 10);
@@ -11,23 +12,36 @@ import { ServerConfig } from 'DoubleTroubleServer/config';
 //     }
 // }
 
-export const initializeWebsocket = (config: ServerConfig, wss: ws.Server) => {
-    setWsHeartbeat(wss, (_ws, data, binary) => {
-        const ws: DTWebsocket = DoubleTroubleWebsocket(_ws, false);
+export const initializeWebsocket = (config: IServerConfig, wss: import("ws").Server) => {
+    setWsHeartbeat(wss, (wsocket, data, binary) => {
+        const dtws: DTWebsocket = DoubleTroubleWebsocket(wsocket, false);
 
         const deserialized = deserializeMessage(data.toString());
         switch(deserialized.kind) {
-            case "ping": return ws.emit(PONG);
-            case "pong": return ws.emit(PING);
+            case "ping": return dtws.emit(PONG);
+            case "pong": return dtws.emit(PING);
 
-            //case "auth":
-                //const bindDn = 
-                    //deserialized.payload.username
+            case "action-request":
+                return handleEvent(deserialized)
+                    .then(ares => {
+                        if(ares.result === "error") {
+                            return ActionCreators.errorResponse(deserialized.payload, ares.message);
+                        } else {
+                            return ares.response;
+                        }
+                    })
+                    .then(r => dtws.emit({ kind: "action-response", payload: r }));
 
-                    //.then(() => ws.emit({ kind: "auth-success", payload: undefined }))
-                        //0;
-                
-                //break;
+            default:
+                return;
+            // case "auth":
+                // const bindDn =
+                    // deserialized.payload.username
+
+                    // .then(() => ws.emit({ kind: "auth-success", payload: undefined }))
+                        // 0;
+
+                // break;
         }
     });
-}
+};
