@@ -3,6 +3,9 @@
   "version": "1.0.0",
   "description": "A network-available web-based adaptation of Jeopardy.",
   "main": "dist/doubletrouble.server.js",
+  "engines": {
+    "node": "10.0.0"
+  },
   "scripts": {
     "build": "cross-env NODE_ENV=production webpack",
     "build-dev": "cross-env NODE_ENV=development webpack",

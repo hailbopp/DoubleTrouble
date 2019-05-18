@@ -1,9 +1,10 @@
 import { Middleware, Dispatch, MiddlewareAPI } from "redux";
 import { setWsHeartbeat, WebSocketBase } from "ws-heartbeat/client";
-import { DoubleTroubleWebsocket, PING, DTWebsocket, ReduxActionRequest } from "DTCore/common";
+import { DoubleTroubleWebsocket, PING, DTWebsocket, UnauthenticatedReduxActionRequest } from "DTCore/common";
 import { AppAction, ActionCreators } from "../actions";
 import { IApplicationState } from "../store";
-import { ClientAction } from "../actions/index";
+import { ClientAction, ActionType } from '../actions/index';
+import { AuthenticatedReduxActionRequest } from '../../DTCore/common';
 
 const getWebsocketUrl = (s: string) => {
     const l = window.location;
@@ -21,7 +22,12 @@ export const initializeWebsockets = (): DTWebsocket => {
     return ws;
 };
 
-const Req = (a: ClientAction): ReduxActionRequest => ({kind: "action-request", payload: a});
+let token: string;
+const Req = (a: ClientAction): UnauthenticatedReduxActionRequest => ({kind: "action-request", payload: a});
+const AuthReq = (a: ClientAction): AuthenticatedReduxActionRequest => 
+    Object.assign({}, Req(a), { kind: "token-action-request" as "token-action-request", token: token });
+
+const activeRequests: Partial<{[k in ActionType]: any}> = {};
 
 export const WebsocketReduxAdapterMiddleware: Middleware =
     (store: MiddlewareAPI<Dispatch<AppAction>, IApplicationState>) => {
@@ -29,29 +35,13 @@ export const WebsocketReduxAdapterMiddleware: Middleware =
         const dispatch = (aa: AppAction) => Promise.resolve().then(_ => store.dispatch(aa));
 
         dispatch(ActionCreators.noop());
-
-        // setInterval(() => {
-        //     const s = store.getState();
-        //     if(s.people.rawPeople.isDefined) {
-        //         dispatch(ActionCreators.processPersonBatch());
-        //     }
-        // }, 15);
-
+        
         return (next: Dispatch<AppAction>) => {
-            // pws.on("ldap-cfg", (cfgEvt) => {
-            //     dispatch(ActionCreators.receiveLdapConfiguration(cfgEvt.payload));
-            //         //.then(_ => dispatch(ActionCreators.submitLoginForm("", "")));
-            // })
-
-            // pws.on("person-batch", (msg) => {
-            //     dispatch(ActionCreators.receivePersonBatch(msg.payload))
-            // });
-
-            // pws.on("auth-success", (msg) => {
-            //     dispatch(ActionCreators.setAuthenticated(true));
-            // })
 
             dtws.on("action-response", (msg) => {
+                if(msg.payload.type === "WS/auth/result") {
+                    token = msg.payload.payload.token;
+                }
                 dispatch(msg.payload);
             });
 
@@ -61,6 +51,13 @@ export const WebsocketReduxAdapterMiddleware: Middleware =
                         case "WS/auth":
                         case "WS/register":
                             return dtws.emit(Req(action));
+
+                        case "WS/user/me":
+                        case "WS/games":
+                            if(!!activeRequests[action.type]) {
+                                return;
+                            }
+                            return dtws.emit(AuthReq(action));
 
                         default:
                             return action;

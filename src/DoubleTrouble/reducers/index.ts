@@ -9,14 +9,11 @@ import { some } from "ts-option";
 export const reducers: Reducer<IApplicationState> = combineReducers<IApplicationState>({
     User: reduce(defaults.User, (state, utils) => ({
         "WS/auth/result": action => {
-            localStorage.setItem("dtrbl.user", JSON.stringify(action.payload.result));
+            localStorage.setItem("dtrbl.user.token", action.payload.token);
             return utils.mutate({
-                AuthedUser: some(action.payload.result),
+                Token: some(action.payload.token),
             });
         },
-
-        // example usage
-        // NOOP: action => mutate({}),
     })),
 
     AuthForm: reduce(defaults.AuthForm, (state, utils) => ({
@@ -36,4 +33,10 @@ export const reducers: Reducer<IApplicationState> = combineReducers<IApplication
             Password: "",
         }),
     })),
+
+    LobbyData: reduce(defaults.LobbyData, (state, utils) => ({
+    })),
+
+    GameData: reduce(defaults.GameData, (state, utils) => ({
+    }))
 });

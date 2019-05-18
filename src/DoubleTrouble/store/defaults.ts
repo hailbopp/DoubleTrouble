@@ -1,11 +1,11 @@
 import { IApplicationState } from "DoubleTrouble/store";
 import { none, some } from "ts-option";
-import { User } from "DTCore/models";
 
 const getUserDefault = () => {
-    const existingUser = localStorage.getItem("dtrbl.user");
+    const existingUserToken = localStorage.getItem("dtrbl.user.token");
     return {
-        AuthedUser: existingUser ? some(JSON.parse(existingUser) as User) : none,
+        Token: existingUserToken ? some(existingUserToken) : none,
+        AuthedUser: none,
     };
 };
 
@@ -15,6 +15,12 @@ const defaultState: IApplicationState = {
         FormType: "login",
         EmailAddress: "",
         Password: "",
+    },
+    LobbyData: {
+        AvailableGames: none,
+    },
+    GameData: {
+        CurrentGame: none,
     },
 };
 

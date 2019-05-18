@@ -1,19 +1,23 @@
-import * as Websocket from 'isomorphic-ws';
-import { DiscriminateUnion } from 'DTCore/utils';
-import { AppAction } from 'DoubleTrouble/actions';
+import * as Websocket from "isomorphic-ws";
+import { DiscriminateUnion } from "DTCore/utils";
+import { AppAction } from "DoubleTrouble/actions";
 import { ClientAction } from '../DoubleTrouble/actions/index';
 
-interface Message<TKind extends string, TPayload> {
+interface IBaseMessage<TKind extends string, TPayload> {
     kind: TKind;
     payload: TPayload;
 }
 
+type AuthenticatedMessage<TKind extends string, TPayload> = IBaseMessage<TKind, TPayload> & {
+    token: string;
+}
 
 // Websocket Events
-export type Heartbeat = Message<"ping" | "pong", undefined>;
+export type Heartbeat = IBaseMessage<"ping" | "pong", undefined>;
 
-export type ReduxActionRequest = Message<"action-request", ClientAction>;
-export type ReduxActionResponse = Message<"action-response", AppAction>;
+export type UnauthenticatedReduxActionRequest = IBaseMessage<"action-request", ClientAction>;
+export type ReduxActionResponse = IBaseMessage<"action-response", AppAction>;
+export type AuthenticatedReduxActionRequest = AuthenticatedMessage<"token-action-request", ClientAction>;
 
 // export type RequestConfiguration = Message<"cfg-request", undefined>;
 // export type LdapConfig = Message<'ldap-cfg', LdapConfiguration>;
@@ -27,16 +31,17 @@ export type ReduxActionResponse = Message<"action-response", AppAction>;
 
 export type WebsocketEvent =
     | Heartbeat
-    | ReduxActionRequest
+    | UnauthenticatedReduxActionRequest
     | ReduxActionResponse
+    | AuthenticatedReduxActionRequest
     ;
 
-export type WebsocketEventKind = ReturnType<(t: WebsocketEvent) => typeof t.kind>
+export type WebsocketEventKind = ReturnType<(t: WebsocketEvent) => typeof t.kind>;
 
 export const PING: Heartbeat = {kind: "ping", payload: undefined};
 export const PONG: Heartbeat = {kind: "pong", payload: undefined};
 
-export type EventCase<U extends WebsocketEventKind> = DiscriminateUnion<WebsocketEvent,'kind', U>;
+export type EventCase<U extends WebsocketEventKind> = DiscriminateUnion<WebsocketEvent,"kind", U>;
 type HandlerFunction<K extends WebsocketEventKind> = (data: EventCase<K>) => void;
 
 interface Handler<K extends WebsocketEventKind> {
@@ -45,11 +50,11 @@ interface Handler<K extends WebsocketEventKind> {
 }
 
 export const deserializeMessage = (s: string) => {
-    let parsed = JSON.parse(s);
-    let msg = parsed as {kind: WebsocketEventKind};
-    let result: EventCase<typeof msg.kind> = parsed as EventCase<typeof msg.kind>;
+    const parsed = JSON.parse(s);
+    const msg = parsed as {kind: WebsocketEventKind};
+    const result: EventCase<typeof msg.kind> = parsed as EventCase<typeof msg.kind>;
     return result;
-}
+};
 
 type WS = Websocket | WebSocket;
 export interface DTWebsocket {
@@ -64,11 +69,11 @@ export const DoubleTroubleWebsocket = (initializer: Websocket | string, initiali
         ? new Websocket(initializer)
         : initializer;
 
-    if(!ws) throw new Error();
-    
+    if(!ws) { throw new Error(); }
+
     ws.onerror = (e) => {
         console.log(e);
-    }
+    };
 
     const handlers: Array<Handler<any>> = [];
     ws.onmessage = (d) => {
@@ -77,14 +82,14 @@ export const DoubleTroubleWebsocket = (initializer: Websocket | string, initiali
             .filter(h => h.eventKind === deserialized.kind)
             .map(h => h as Handler<typeof deserialized.kind>)
             .forEach(h => h.fn(deserialized));
-    }
+    };
 
-    let pSocket: DTWebsocket = {
-        ws: ws,
+    const pSocket: DTWebsocket = {
+        ws,
         on: <TKind extends WebsocketEventKind>(eventKind: TKind, handler: HandlerFunction<TKind>) => {
             const newHandler: Handler<TKind> = {
                 fn: handler,
-                eventKind
+                eventKind,
             };
             handlers.push(newHandler);
             // ws.on("message", (w: Websocket, data: string) => {
@@ -100,8 +105,8 @@ export const DoubleTroubleWebsocket = (initializer: Websocket | string, initiali
             } else {
                 setTimeout(() => pSocket.emit(event), 100);
             }
-        }        
+        },
     };
-    
+
     return pSocket;
-}
+};

@@ -1,5 +1,5 @@
-import { Option } from 'ts-option';
-import { MaybeDocument } from 'nano';
+import { Option } from "ts-option";
+import { MaybeDocument } from "nano";
 
 type Guid = string;
 
@@ -7,63 +7,92 @@ type UserID = Guid;
 type PlayerID = Guid;
 type GameID = Guid;
 
-export interface UserCredentials {
+export interface IUserCredentials {
     username: string;
     passwordHash: string;
 }
 
-export interface TriviaSolution {
+export interface ITriviaSolution {
     solutionText: string;
     playerId: PlayerID;
     isCorrect: Option<boolean>;
 }
 
-export interface TriviaQuestion {
+export type TriviaQuestionScoringType =
+    | "standard"
+    | "daily-double";
+
+interface IBaseTriviaQuestion {
     questionId: number;
     points: number;
-    questionBody: string;
-    proposedSolutions: Array<TriviaSolution>;
 }
 
-export interface TriviaCategory {
+type UnrevealedTriviaQuestion = IBaseTriviaQuestion & {
+    status: "unrevealed";
+};
+
+type RevealedTriviaQuestion = IBaseTriviaQuestion & {
+    status: "revealed";
+    questionBody: string;
+    proposedSolutions: ITriviaSolution[];
+};
+
+export type TriviaQuestion =
+    | UnrevealedTriviaQuestion
+    | RevealedTriviaQuestion;
+
+export interface ITriviaCategory {
     categoryId: number;
     title: string;
-    questions: Array<TriviaQuestion>;
+    questions: TriviaQuestion[];
 }
 
-export type Board = Array<TriviaCategory>;
+export type Board = ITriviaCategory[];
 
-interface _User {
+export interface IPartialUser {
     userId: UserID;
     email: string;
-    passwordHash: string;
     handle: string;
 }
-export type User = MaybeDocument & _User;
 
-export interface GamePlayer {
+type IUser = IPartialUser & {
+    passwordHash: string;
+};
+
+export type User = MaybeDocument & IUser;
+
+export interface IGamePlayer {
     playerId: PlayerID;
     userId: UserID;
     score: number;
 }
 
 export type RoundRulesType =
+    | "FreePlay"
     | "Basic"
     | "Double"
     | "Final";
 
-export interface GameRound {
+export interface IGameRound {
     roundNumber: number;
     rulesType: RoundRulesType;
     board: Board;
 }
 
-interface _Game {
+export interface IGameListing {
     gameId: GameID;
     created: Date;
-    joinCode: string;
-    players: Array<GamePlayer>;
-    rounds: Array<GameRound>;
+    createdBy: UserID;
 }
 
-export type Game = _Game & MaybeDocument;
+interface IGame {
+    gameId: GameID;
+    created: Date;
+    createdBy: UserID;
+    active: boolean;
+    joinCode: string;
+    players: IGamePlayer[];
+    rounds: IGameRound[];
+}
+
+export type Game = IGame & MaybeDocument;
